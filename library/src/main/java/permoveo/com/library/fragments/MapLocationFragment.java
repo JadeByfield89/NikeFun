@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import permoveo.com.library.network.GooglePlaceRequest;
 
 /**
  * Created by byfieldj on 2/1/17.
- *
+ * <p>
  * This is an animated Fragment that shows the user his/her current location, as well as a short list
  * of nearby Nike retail locations
  */
@@ -64,7 +65,7 @@ public class MapLocationFragment extends DialogFragment {
                 .getDecorView();
 
         // Let's give this fragment some personality with a Wave animation once it is started
-       YoYo.with(Techniques.Wave).duration(600).playOn(decorView);
+        YoYo.with(Techniques.Wave).duration(600).playOn(decorView);
     }
 
     @Nullable
@@ -117,12 +118,12 @@ public class MapLocationFragment extends DialogFragment {
     }
 
     private void displaySearchResults() {
-        if(!mResultsDisplayed) {
+        if (!mResultsDisplayed) {
             mDescription.setTextSize(15.0f);
-            mDescription.setText("Your nearest Nike retail locations are " + "\n\n" + mNearbyLocations.get(0).getBusinessName() + "\n" + mNearbyLocations.get(1).getBusinessAddress() + "\n\n" + mNearbyLocations.get(1).getBusinessName() + "\n" + mNearbyLocations.get(1).getBusinessAddress() + "\n\n" + mNearbyLocations.get(2).getBusinessName() + "\n" + mNearbyLocations.get(2).getBusinessAddress());
+            mDescription.setText("Your nearest Nike retail locations are " + "\n\n" + mNearbyLocations.get(0).getBusinessName() + "\n" + mNearbyLocations.get(0).getBusinessAddress() + "\n\n" + mNearbyLocations.get(1).getBusinessName() + "\n" + mNearbyLocations.get(1).getBusinessAddress() + "\n\n" + mNearbyLocations.get(2).getBusinessName() + "\n" + mNearbyLocations.get(2).getBusinessAddress());
+            showNikeLocationsOnMap();
             mResultsDisplayed = true;
-        }
-        else{
+        } else {
             Toast.makeText(getContext(), "Already showing nearby results", Toast.LENGTH_SHORT).show();
 
         }
@@ -130,14 +131,33 @@ public class MapLocationFragment extends DialogFragment {
 
     private void getMapImageUrlAndDisplay() {
 
-        String staticImageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=13&size=500x200&markers=color:red|%s,%s|&key=%s";
+        Log.d("MapLocationFragment", "Latitude -> " + mLatitude);
+        Log.d("MapLocationFragment", "Longitude -> " + mLongitude);
+
+
+        String staticImageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=13&size=600x400&markers=color:red|%s,%s|&key=%s";
 
         String formattedUrl = String.format(staticImageUrl, mLatitude, mLongitude, mLatitude, mLongitude, AppConstants.GOOGLE_MAP_IMAGE_API_KEY);
 
         // Load the static map image with Picasso
-        Picasso.with(getContext()).load(formattedUrl).fit().into(mMapImage);
+        Picasso.with(getContext()).load(formattedUrl).fit().centerCrop().into(mMapImage);
+        Log.d("MapLocationFragment", "Map image -> " + formattedUrl);
+
 
         mCoordinates.setText(mLatitude + "," + mLongitude);
+
+
+    }
+
+    private void showNikeLocationsOnMap() {
+
+        String staticImageUrl = "https://maps.googleapis.com/maps/api/staticmap?zoom=11&size=600x400&markers=color:blue|%s,%s|%s,%s|%s,%s|&key=%s";
+
+        String formattedUrl = String.format(staticImageUrl, mNearbyLocations.get(0).getLatitude(), mNearbyLocations.get(0).getLongitude(), mNearbyLocations.get(1).getLatitude(), mNearbyLocations.get(1).getLongitude(), mNearbyLocations.get(2).getLatitude(), mNearbyLocations.get(2).getLongitude(), AppConstants.GOOGLE_MAP_IMAGE_API_KEY);
+
+        Log.d("Map", "FormattedUrl -> " + formattedUrl);
+        // Load the static map image with Picasso
+        Picasso.with(getContext()).load(formattedUrl).fit().centerCrop().into(mMapImage);
 
 
     }

@@ -107,12 +107,13 @@ public class InfiniteViewPagerAdapter extends PagerAdapter {
 
         // Make sure we "shrink" down the previous center animate before zooming the next
         if (mCurrentView != null) {
-            scaleDownMiddleView(mCurrentView);
+            //scaleDownMiddleView(mCurrentView);
         }
 
-        mCurrentView = container.getChildAt((container.getChildCount() / 2) + 1);
+        //Log.d("InfiniteView", "Middle item index " + (container.getChildCount() / 2 + 1));
+        //mCurrentView = container.getChildAt((container.getChildCount() / 2) + 1);
 
-        scaleUpMiddleView(mCurrentView);
+       // scaleUpMiddleView(mCurrentView);
 
 
     }

@@ -12,18 +12,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import permoveo.com.library.R;
+import permoveo.com.library.adapters.CarouselAdapter;
 import permoveo.com.library.adapters.InfiniteViewPagerAdapter;
 import permoveo.com.library.fragments.MapLocationFragment;
 import permoveo.com.library.location.GPSLocator;
+import permoveo.com.library.views.CarouselView;
 import permoveo.com.library.views.InfiniteViewPager;
 import permoveo.com.library.views.LocateMeView;
 
 /**
  * Created by byfieldj on 2/1/17.
- *
+ * <p>
  * This Activity is designed to be re-usable. It's abstract because it doesn't need to be instantiated, we just want to store common, dependable features here and let subclasses account for specific
  * functionality. Dependent classes or applications simply need to extend LocationActivity in order to reuse its UI
- *
  */
 
 public abstract class LocationActivity extends AppCompatActivity {
@@ -32,6 +33,8 @@ public abstract class LocationActivity extends AppCompatActivity {
 
     InfiniteViewPager mViewPager;
     InfiniteViewPagerAdapter mPagerAdapter;
+
+    private CarouselView mCarousel;
 
 
     private GPSLocator mLocator;
@@ -44,18 +47,19 @@ public abstract class LocationActivity extends AppCompatActivity {
         setContentView(mainContent);
 
         mViewPager = (InfiniteViewPager) findViewById(R.id.pager);
+        mCarousel = (CarouselView) findViewById(R.id.carousel);
 
         mainContent.setListener(new LocateMeView.LocationListener() {
             @Override
             public void onLocateButtonSelected() {
 
+                Log.d("LocationActivity", "onLocationButtonSelected");
                 if (mLocator.getCurrentLocation() != null) {
                     Location currentLocation = mLocator.getCurrentLocation();
 
                     MapLocationFragment mapFragment = MapLocationFragment.newInstance(String.valueOf(currentLocation.getLatitude()), String.valueOf(currentLocation.getLongitude()));
                     mapFragment.show(getSupportFragmentManager(), "mapFragment");
-                }
-                else{
+                } else {
 
                     Toast.makeText(LocationActivity.this, "Are you sure GPS is turned on?", Toast.LENGTH_SHORT).show();
                 }
@@ -69,8 +73,12 @@ public abstract class LocationActivity extends AppCompatActivity {
 
         mLocator = new GPSLocator(this);
 
-        mPagerAdapter = new InfiniteViewPagerAdapter(this, mImages);
-        mViewPager.setAdapter(mPagerAdapter);
+
+        final CarouselAdapter adapter = new CarouselAdapter(this);
+        mCarousel.setAdapter(adapter);
+        mCarousel.setSelection(adapter.getCount() / 2); //adapter.getCount()-1
+        //carousel.setSlowDownCoefficient(1);
+        mCarousel.setSpacing(1.3f);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
@@ -89,4 +97,6 @@ public abstract class LocationActivity extends AppCompatActivity {
         Log.d("LocationActivity", "Shutting down GPS Connection!");
 
     }
+
+
 }

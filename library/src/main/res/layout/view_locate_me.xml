@@ -9,6 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:fitsSystemWindows="true">
 
 
@@ -44,11 +45,18 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
+    <permoveo.com.library.views.CarouselView
+        android:id="@+id/carousel"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></permoveo.com.library.views.CarouselView>
 
     <permoveo.com.library.views.InfiniteViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:visibility="gone"
         android:layout_centerInParent="true"></permoveo.com.library.views.InfiniteViewPager>
 
 </RelativeLayout>
